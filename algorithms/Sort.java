@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.IntStream;
+
 /**
  * @Author ws
  * @Date 2021/3/20 15:15
@@ -12,7 +16,7 @@ public class Sort {
      * @param i   下标
      * @param j   下标
      */
-    public static void swap(int[] arr, int i, int j) {
+    private static void swap(int[] arr, int i, int j) {
         // 异或操作 相同为0,不同为1
         arr[i] = arr[i] ^ arr[j];
         arr[j] = arr[i] ^ arr[j];
@@ -21,7 +25,7 @@ public class Sort {
 
     /**
      * 冒泡排序
-     *
+     * O(N^2)
      * @param arr
      * @return
      */
@@ -37,30 +41,35 @@ public class Sort {
     }
 
     /**
-     * 插入排序
-     *
+     * 插入排序,间隔为1
+     * O(N^2)
      * @param arr
      * @return
      */
     public static int[] insertSort(int[] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            int insert = arr[i];
-            // 插入值的前一个值的下标
-            int index = i - 1;
-            // 如果插入的数比前一个小,移动
-            while (index >= 0 && insert < arr[index]) {
-                // 移动数组
-                arr[index + 1] = arr[index];
-                index--;
-            }
-            // 将值插入到比insert小的值的后面
-            arr[index + 1] = insert;
-        }
+//        for (int i = 1; i < arr.length; i++) {
+//            int insert = arr[i];
+//            // 插入值的前一个值的下标
+//            int index = i - 1;
+//            // 如果插入的数比前一个小,移动
+//            while (index >= 0 && insert < arr[index]) {
+//                // 移动数组
+//                arr[index + 1] = arr[index];
+//                index--;
+//            }
+//            // 将值插入到比insert小的值的后面
+//            arr[index + 1] = insert;
+//        }
+//        return arr;
+
+        shellInsertSort(arr, 1);
         return arr;
     }
 
     /**
      * 快速排序
+     *
+     * O(N log2N)
      * @param arr
      * @param low
      * @param high
@@ -100,14 +109,233 @@ public class Sort {
         return arr;
     }
 
+
+    /**
+     * 希尔排序
+     *
+     * @param arr
+     * @return
+     */
+    public static int[] shellSort(int[] arr) {
+        // 决定间隔
+        for (int dk = arr.length; dk > 0; dk = dk / 2) {
+            shellInsertSort(arr, dk);
+        }
+        return arr;
+    }
+
+    /**
+     * 以dk为间隔的插入排序
+     *
+     * @param arr
+     * @param dk
+     */
+    private static void shellInsertSort(int[] arr, int dk) {
+        // 根据间隔dk,将大数组分为若干数组
+        for (int i = dk; i < arr.length; i++) {
+            // 如果当前下标的值比它下标小dk的值小我们就交换,插入排序,间隔为dk
+            // j >= dk避免后面的比较造成数组下标越界
+            for (int j = i; j >= dk && arr[j] < arr[j - dk]; j = j - dk) {
+                // 两值交换
+                swap(arr, j, j - dk);
+            }
+        }
+    }
+
+
+    /**
+     * 归并排序
+     * O(N log2N)
+     * @param arr
+     * @return
+     */
+    public static int[] mergeSort(int[] arr) {
+        recursionSort(arr, 0, arr.length - 1);
+        return arr;
+    }
+
+    /**
+     * 对左右两边的数据进行递归
+     *
+     * @param arr
+     * @param left
+     * @param right
+     */
+    private static void recursionSort(int[] arr, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int mid = left + ((right - left) >> 1);
+        // 递归左边数组
+        recursionSort(arr, left, mid);
+        // 递归右边数组
+        recursionSort(arr, mid + 1, right);
+
+        merge(arr, left, mid, right);
+    }
+
+    /**
+     * 对以mid为界限的两个有序数组合并成一个有序数组并复制到arr里面去
+     *
+     * @param arr
+     * @param left
+     * @param mid   左边数组的最后一个索引
+     * @param right
+     */
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int[] help = new int[right - left + 1];
+        int p1 = left;
+        int p2 = mid + 1;
+        int i = 0;
+        while (p1 <= mid && p2 <= right) {
+            // 两个数组小的值先放入help数组
+            help[i++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
+        }
+        // 有一个数组先被遍历完
+        while (p1 <= mid) {
+            help[i++] = arr[p1++];
+        }
+        while (p2 <= right) {
+            help[i++] = arr[p2++];
+        }
+        // 拷贝数组
+        for (i = 0; i < help.length; i++) {
+            arr[left + i] = help[i];
+        }
+    }
+
+    /**
+     * 桶排序
+     *
+     * @param arr
+     * @return
+     */
+    public static int[] bucketSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return null;
+        }
+        // max初始值为int的最小值,能正确的利用max函数找到数组的最大值
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+        // 找到数组的最大值,和最小值
+        for (int i = 0; i < arr.length; i++) {
+            max = max(max, arr[i]);
+            min = min(min, arr[i]);
+        }
+
+        // 多少个桶
+        int bucketNum = (max - min) / arr.length + 1;
+        // 创建桶
+        ArrayList<ArrayList<Integer>> bucketArr = new ArrayList<>(bucketNum);
+        for (int i = 0; i < bucketNum; i++) {
+            bucketArr.add(new ArrayList<Integer>());
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            // 找到哪个桶
+            int bucketIndex = (arr[i] - min) / arr.length;
+            bucketArr.get(bucketIndex).add(arr[i]);
+        }
+
+        for (int i = 0; i < bucketArr.size(); i++) {
+            // 排序
+            Collections.sort(bucketArr.get(i));
+        }
+
+        // 把多个桶的IntStream合并并映射成数组
+        arr = bucketArr.stream().flatMapToInt(a -> {
+            // 每一个桶,我们把它映射成IntStream
+            IntStream intStream = a.stream().flatMapToInt(b -> {
+                return IntStream.of(b.intValue());
+            });
+            return intStream;
+        }).toArray();
+
+        return arr;
+
+    }
+
+    /**
+     * 返回两值中的小的那个
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static int min(int a, int b) {
+        return (a <= b) ? a : b;
+    }
+
+    /**
+     * 返回两值中的大的那个
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static int max(int a, int b) {
+        return (a >= b) ? a : b;
+    }
+
+    /**
+     * 基数排序(数组值不能有负数,如果必须要,我们把正数和负数分开排序再合并)
+     * O(d(n+r))
+     * @param arr
+     * @param maxDigit 最大位数
+     * @return
+     */
+    public static int[] radixSort(int[] arr, int maxDigit) {
+        // 10的maxDigit+1次方,数组最大位数的数据上限
+        double max = Math.pow(10, maxDigit);
+        // 代表位数对应的数:1,10,100~
+        int n=1;
+        // 保存每一位的排序后的结果用于下一位的排序输入
+        int k=0;
+        //  二维数组用于保存每次排序后的结果,将当前位上的排序结果相同的数字放在同一个桶里面
+        int[][] bucket = new int[10][arr.length];
+        // 用于保存每次排序后的结果,将当前位上排序结果相同的数字放在同一个桶里
+        int[] order = new int[arr.length];
+        while (n<max){
+            for (int i = 0; i < arr.length; i++) {
+                // 个位上的数字,或者十位上的数字~
+                int digit=(arr[i]/n)%10;
+                // 将数据放到桶里面
+                bucket[digit][order[digit]]=arr[i];
+                order[digit]++;
+            }
+            for (int i = 0; i < arr.length; i++) {
+                // 桶里面如果有数据,从上到下遍历这个桶,并将数据保存到原数组
+                if (order[i]!=0){
+                    for (int j = 0; j < order[i]; j++) {
+                        arr[k]=bucket[i][j];
+                        k++;
+                    }
+                }
+                order[i]=0;
+            }
+            // 从个位移到十位再到百位~
+            n*=10;
+            k=0; // 下一轮保存位排序结果做准备
+        }
+        return arr;
+    }
+
+
     public static void main(String[] args) {
 
-        int[] arr = {1, 4, -6, 8, 5, 12};
+        int[] arr = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
         int[] sort = bubbleSort(arr);
-        int[] arr2 = {1, 4, -6, 8, 5, 12};
+        int[] arr2 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
         int[] sort2 = insertSort(arr2);
-        int[] arr3 = {1, 4, -6, 8, 5, 7};
+        int[] arr3 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
         int[] sort3 = quickSort(arr3, 0, arr3.length - 1);
-
+        int[] arr4 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
+        int[] sort4 = shellSort(arr4);
+        int[] arr5 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
+        int[] sort5 = mergeSort(arr5);
+        int[] arr6 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
+        int[] sort6 = bucketSort(arr6);
+        int[] arr7 = {1, 4, 6, 8, 5, 7, 54, 10, 56, 12, 46, 231, 654, 2, 98, 4};
+        int[] sort7 = radixSort(arr7, 3);
     }
 }
