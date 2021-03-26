@@ -6,6 +6,40 @@ import java.util.stream.IntStream;
  * @Author ws
  * @Date 2021/3/20 15:15
  * @Version 1.0
+ * <p>
+ * 排序的稳定性: 相同的数的顺序在排完序后不改变   [1,4,6,4,8,4]
+ * 三个4的先后顺序不改变
+ * 意义:可以保留原始次序
+ * 例:  201803523 王   1班
+ * 201803524 李   2班
+ * 201803525 张   1班
+ * 按照学号结果如上
+ * 现在再按班级排序
+ * 201803523 王  1班
+ * 201803525 张  1班
+ * 201803524 李  2班
+ * 此时王还在张的前面,保留了第一次排序的原始次序
+ */
+
+/**
+ * 排序的稳定性: 相同的数的顺序在排完序后不改变   [1,4,6,4,8,4]
+ * 三个4的先后顺序不改变
+ * 意义:可以保留原始次序
+ * 例:  201803523 王   1班
+ *      201803524 李   2班
+ *      201803525 张   1班
+ *  按照学号结果如上
+ *  现在再按班级排序
+ *      201803523 王  1班
+ *      201803525 张  1班
+ *      201803524 李  2班
+ *  此时王还在张的前面,保留了第一次排序的原始次序
+ */
+
+/**
+ * 工程排序: 在大数组时:1.快速排序(当需要排序的数据是基本数据类型时,因为他不需要稳定,就算不稳定我们也看不出来)
+ *                  2.归并排序(当需要排序的数据是我们自定义的数据类型时,因为他需要稳定,就是上面所说的保留原始次序,如果不稳定我们可以看出来)
+ *          在上面的两钟方法中的递归过程中,如果数据量小于60,直接用插入排序,因为在小数据量的时候插入排序的常数项更低更快
  */
 public class Sort {
 
@@ -24,7 +58,7 @@ public class Sort {
     }
 
     /**
-     * 冒泡排序
+     * 冒泡排序(稳定)
      * O(N^2)
      *
      * @param arr
@@ -42,7 +76,25 @@ public class Sort {
     }
 
     /**
-     * 插入排序,间隔为1
+     * 选择排序(不稳定)
+     * O(N^2)
+     * @param arr
+     */
+    public static void selectSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                minIndex = arr[j] < arr[minIndex] ? j : minIndex;
+            }
+            swap(arr, i, minIndex);
+        }
+    }
+
+    /**
+     * 插入排序,间隔为1(稳定)
      * O(N^2)
      *
      * @param arr
@@ -69,7 +121,7 @@ public class Sort {
     }
 
     /**
-     * 快速排序
+     * 快速排序(不稳定)
      * <p>
      * O(N log2N)
      *
@@ -258,12 +310,40 @@ public class Sort {
     }
 
     /**
-     * 桶排序
+     * 桶排序(不能有负数)
+     * O(N)
+     * @param arr
+     */
+    public static void bucketSort(int[] arr) {
+        if (arr == null || arr.length < 2) {
+            return;
+        }
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            max = Math.max(max, arr[i]);
+        }
+        // 创建最大数对应大小的数组
+        int[] bucket = new int[max + 1];
+        // bucket数组记录对应数值的个数,因为数组的下标不能有负数,所以不能有负值参与排序
+        for (int i = 0; i < arr.length; i++) {
+            bucket[arr[i]]++;
+        }
+        int i = 0;
+        for (int j = 0; j < bucket.length; j++) {
+            while (bucket[j]-- > 0) {
+                // 给原数组重新赋值
+                arr[i++] = j;
+            }
+        }
+    }
+
+    /**
+     * 桶排序(可以有负数)
      *
      * @param arr
      * @return
      */
-    public static int[] bucketSort(int[] arr) {
+    public static int[] bucketSort2(int[] arr) {
         if (arr == null || arr.length < 2) {
             return null;
         }
@@ -274,6 +354,10 @@ public class Sort {
         for (int i = 0; i < arr.length; i++) {
             max = max(max, arr[i]);
             min = min(min, arr[i]);
+        }
+
+        if (max == min) {
+            return arr;
         }
 
         // 多少个桶
@@ -376,7 +460,7 @@ public class Sort {
 
 
     /**
-     * 堆排序
+     * 堆排序(不稳定)
      * 基于完全二叉树
      *
      * @param arr
@@ -457,8 +541,8 @@ public class Sort {
         int[] sort4 = shellSort(arr4);
         int[] arr5 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
         int[] sort5 = mergeSort(arr5);
-        int[] arr6 = {1, 4, -6, 8, 5, 7, 54, 10, 56, 12, -46, 231, 654, 2, 98, 4};
-        int[] sort6 = bucketSort(arr6);
+        int[] arr6 = {1, 4, 8, 5, 7, 54, 10, 56, 12, 231, 654, 2, 98, 4};
+        bucketSort(arr6);
         int[] arr7 = {1, 4, 6, 8, 5, 7, 54, 10, 56, 12, 46, 231, 654, 2, 98, 4};
         int[] sort7 = radixSort(arr7, 3);
 
