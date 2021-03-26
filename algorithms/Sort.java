@@ -26,6 +26,7 @@ public class Sort {
     /**
      * 冒泡排序
      * O(N^2)
+     *
      * @param arr
      * @return
      */
@@ -43,6 +44,7 @@ public class Sort {
     /**
      * 插入排序,间隔为1
      * O(N^2)
+     *
      * @param arr
      * @return
      */
@@ -68,8 +70,9 @@ public class Sort {
 
     /**
      * 快速排序
-     *
+     * <p>
      * O(N log2N)
+     *
      * @param arr
      * @param low
      * @param high
@@ -111,6 +114,55 @@ public class Sort {
 
 
     /**
+     * 快排的改进,我们把等于key的部分,不参与后续的递归(三路快排)
+     *
+     * @param arr
+     * @param low
+     * @param high
+     * @return
+     */
+    public static void quickMoreSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int[] p = partition(arr, low, high);
+            quickMoreSort(arr, low, p[0] - 1);
+            quickMoreSort(arr, p[1] + 1, high);
+        }
+    }
+
+    private static int[] partition(int[] arr, int low, int high) {
+        // 小于key的数组末尾下标
+        int less = low - 1;
+        // 大于key的数组的起始下标
+        int more = high + 1;
+        // 基准值
+        int key = arr[high];
+        // 当前下标
+        int current = low;
+        while (current < more) {
+            if (arr[current] < key) {
+                // current移动是因为交换的++less是等于key的区间,或者等于key的区间为空,就是自己交换自己
+                // 他们永远<=key
+                swap2(arr, ++less, current++);
+            } else if (arr[current] > key) {
+                swap2(arr, --more, current);
+            } else {
+                current++;
+            }
+        }
+        // 返回等于key的区间起始下标和结尾下标
+        return new int[]{less + 1, more - 1};
+    }
+
+    public static void swap2(int[] arr, int i, int j) {
+        if (i == j) {
+            return;
+        }
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+
+    /**
      * 希尔排序
      *
      * @param arr
@@ -146,6 +198,7 @@ public class Sort {
     /**
      * 归并排序
      * O(N log2N)
+     *
      * @param arr
      * @return
      */
@@ -280,6 +333,7 @@ public class Sort {
     /**
      * 基数排序(数组值不能有负数,如果必须要,我们把正数和负数分开排序再合并)
      * O(d(n+r))
+     *
      * @param arr
      * @param maxDigit 最大位数
      * @return
@@ -288,36 +342,106 @@ public class Sort {
         // 10的maxDigit+1次方,数组最大位数的数据上限
         double max = Math.pow(10, maxDigit);
         // 代表位数对应的数:1,10,100~
-        int n=1;
+        int n = 1;
         // 保存每一位的排序后的结果用于下一位的排序输入
-        int k=0;
+        int k = 0;
         //  二维数组用于保存每次排序后的结果,将当前位上的排序结果相同的数字放在同一个桶里面
         int[][] bucket = new int[10][arr.length];
         // 用于保存每次排序后的结果,将当前位上排序结果相同的数字放在同一个桶里
         int[] order = new int[arr.length];
-        while (n<max){
+        while (n < max) {
             for (int i = 0; i < arr.length; i++) {
                 // 个位上的数字,或者十位上的数字~
-                int digit=(arr[i]/n)%10;
+                int digit = (arr[i] / n) % 10;
                 // 将数据放到桶里面
-                bucket[digit][order[digit]]=arr[i];
+                bucket[digit][order[digit]] = arr[i];
                 order[digit]++;
             }
             for (int i = 0; i < arr.length; i++) {
                 // 桶里面如果有数据,从上到下遍历这个桶,并将数据保存到原数组
-                if (order[i]!=0){
+                if (order[i] != 0) {
                     for (int j = 0; j < order[i]; j++) {
-                        arr[k]=bucket[i][j];
+                        arr[k] = bucket[i][j];
                         k++;
                     }
                 }
-                order[i]=0;
+                order[i] = 0;
             }
             // 从个位移到十位再到百位~
-            n*=10;
-            k=0; // 下一轮保存位排序结果做准备
+            n *= 10;
+            k = 0; // 下一轮保存位排序结果做准备
         }
         return arr;
+    }
+
+
+    /**
+     * 堆排序
+     * 基于完全二叉树
+     *
+     * @param arr
+     */
+    public static void heapSort(int[] arr) {
+        if (arr == null && arr.length < 2) {
+            return;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            // 创建大根堆
+            heapInsert(arr, i);
+        }
+
+        // 排序
+        int size = arr.length - 1;
+        do {
+            // 第一个节点和最后一个节点交换,size--是最后一个是当前循环最大的不用参与比较
+            swap2(arr, 0, size--);
+            // 堆化
+            heapify(arr, 0, size);
+        } while (size > 0);
+    }
+
+    /**
+     * 大根堆插入
+     *
+     * @param arr
+     * @param i
+     */
+    private static void heapInsert(int[] arr, int i) {
+        int index = i;
+        // 如果子节点比父节点大,我们交换位置,当index=0时  (index-1)/2 =0 计算机就是这么算的
+        while (arr[index] > arr[(index - 1) / 2]) {
+            swap2(arr, index, (index - 1) / 2);
+            // 继续向上找父亲节点
+            index = (index - 1) / 2;
+        }
+    }
+
+    /**
+     * 堆的下沉
+     *
+     * @param arr
+     * @param i
+     * @param size
+     */
+    private static void heapify(int[] arr, int i, int size) {
+        int index = i;
+        // 左孩子
+        int left = index * 2 + 1;
+        while (left <= size) {
+            // 返回左右孩子那个大的节点的下标
+            int large = left + 1 <= size && arr[left + 1] > arr[left] ? left + 1 : left;
+            // 找到父节点和他儿子节点那个大的节点的下标
+            large = arr[large] > arr[index] ? large : index;
+            // 如果父节点大,本次不下沉
+            if (large == index) {
+                break;
+            }
+            // 值小的节点下沉,形成大根堆
+            swap2(arr, index, large);
+
+            index = large;
+            left = index * 2 + 1;
+        }
     }
 
 
@@ -337,5 +461,11 @@ public class Sort {
         int[] sort6 = bucketSort(arr6);
         int[] arr7 = {1, 4, 6, 8, 5, 7, 54, 10, 56, 12, 46, 231, 654, 2, 98, 4};
         int[] sort7 = radixSort(arr7, 3);
+
+        int[] arr8 = {1, 4, -6, 8, 5, 7, 54, 10, 4};
+        quickMoreSort(arr8, 0, arr8.length - 1);
+
+        int[] arr9 = {1, 4, -6, 8, 5, 7, 54, 10, 4};
+        heapSort(arr9);
     }
 }
