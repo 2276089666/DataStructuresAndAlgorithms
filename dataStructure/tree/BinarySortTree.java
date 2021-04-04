@@ -9,8 +9,7 @@ package tree;
 public class BinarySortTree {
     private Node root;
 
-    // <? super T>实现了Comparable接口的子类也可以
-    private class Node <T extends Comparable<? super T>>{
+    private class Node <T extends Comparable>{
         private T data;
         private Node left;
         private Node right;
@@ -25,7 +24,7 @@ public class BinarySortTree {
      * @param key 树的节点的值
      * @param <T>
      */
-    public <T extends Comparable<? super T>> void  insertBST (T key){
+    public <T extends Comparable> void  insertBST (T key){
         Node p=root;
         Node previous=null;
         while (p!=null){
