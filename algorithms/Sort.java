@@ -45,16 +45,22 @@ public class Sort {
 
     /**
      * 两值交换
+     * 异或:相同两数异或为0,任何数与0异或还是任何数
      *
      * @param arr 需要交换的数组
      * @param i   下标
      * @param j   下标
      */
     private static void swap(int[] arr, int i, int j) {
+        // 内存位置相同,arr[1]^arr[1]=0,会导致arr[1]=0
+        // 但是 arr[]{1,2,1}   arr[0]^arr[2]不会出错
+        if (i==j){
+            return;
+        }
         // 异或操作 相同为0,不同为1
         arr[i] = arr[i] ^ arr[j];
-        arr[j] = arr[i] ^ arr[j];
-        arr[i] = arr[i] ^ arr[j];
+        arr[j] = arr[i] ^ arr[j]; // arr[j] = arr[i]^arr[j]^arr[j] = arr[i]^0 = arr[i]
+        arr[i] = arr[i] ^ arr[j]; // arr[i] = arr[i]^arr[j]^arr[i] = arr[j]^0 = arr[j]
     }
 
     /**
@@ -89,6 +95,7 @@ public class Sort {
             for (int j = i + 1; j < arr.length; j++) {
                 minIndex = arr[j] < arr[minIndex] ? j : minIndex;
             }
+            // 与数组的复杂度无关,永远只交换N次
             swap(arr, i, minIndex);
         }
     }
@@ -167,7 +174,11 @@ public class Sort {
 
     /**
      * 快排的改进,我们把等于key的部分,不参与后续的递归(三路快排)
-     *
+     *  T(N)=aT(N/b)+O(N^d)  即 T(N)=2T(N/2)+O(N^1) a=2,b=2,d=1
+     *  master公式:
+     *  log(b,a) > d   时间复杂度为:N^log(b,a)
+     *  log(b,a) ==d   时间复杂度为:N^d * logN   √
+     *  log(b,a) < d   时间复杂度为:N^d
      * @param arr
      * @param low
      * @param high
@@ -175,9 +186,9 @@ public class Sort {
      */
     public static void quickMoreSort(int[] arr, int low, int high) {
         if (low < high) {
-            int[] p = partition(arr, low, high);
-            quickMoreSort(arr, low, p[0] - 1);
-            quickMoreSort(arr, p[1] + 1, high);
+            int[] p = partition(arr, low, high);    //里面有个while (current < more)所以常数项为O(N^1)
+            quickMoreSort(arr, low, p[0] - 1);  //几次quickMoreSort,我们的master公式的a为几
+            quickMoreSort(arr, p[1] + 1, high);  // int mid, int high这两个参数的范围就是N/2
         }
     }
 
@@ -551,5 +562,7 @@ public class Sort {
 
         int[] arr9 = {1, 4, -6, 8, 5, 7, 54, 10, 4};
         heapSort(arr9);
+
+
     }
 }
