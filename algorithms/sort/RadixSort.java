@@ -7,16 +7,16 @@ package sort;
  */
 public class RadixSort {
     /**
-     * 基数排序(数组值不能有负数,如果必须要,我们把正数和负数分开排序再合并)
-     * O(d(n+r))
+     * 基数排序(数组值不能有负数,如果必须要,我们把正数和负数分开排序再合并),桶排序思想的一种
+     * O(N*log(10,Max))
      *
      * @param arr
-     * @param maxDigit 最大位数
      * @return
      */
-    public static int[] radixSort(int[] arr, int maxDigit) {
+    public static void radixSort(int[] arr) {
+        int maxbits = maxbits(arr);
         // 10的maxDigit+1次方,数组最大位数的数据上限
-        double max = Math.pow(10, maxDigit);
+        double max = Math.pow(10, maxbits);
         // 代表位数对应的数:1,10,100~
         int n = 1;
         // 保存每一位的排序后的结果用于下一位的排序输入
@@ -47,7 +47,24 @@ public class RadixSort {
             n *= 10;
             k = 0; // 下一轮保存位排序结果做准备
         }
-        return arr;
+    }
+
+    /**
+     * 计算一个数组中的最大数的位数
+     * @param arr
+     * @return
+     */
+    public static int maxbits(int[] arr) {
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            max = Math.max(max, arr[i]);
+        }
+        int res = 0;
+        while (max != 0) {
+            res++;
+            max /= 10;
+        }
+        return res;
     }
 
 }

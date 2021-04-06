@@ -7,17 +7,16 @@ package sort;
  */
 public class ShellSort {
     /**
-     * 希尔排序
+     * 希尔排序(稳定)
      *
      * @param arr
      * @return
      */
-    public static int[] shellSort(int[] arr) {
+    public static void shellSort(int[] arr) {
         // 决定间隔
         for (int dk = arr.length; dk > 0; dk = dk / 2) {
             shellInsertSort(arr, dk);
         }
-        return arr;
     }
 
     /**

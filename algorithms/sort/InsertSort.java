@@ -8,12 +8,12 @@ package sort;
 public class InsertSort {
     /**
      * 插入排序,间隔为1(稳定)
-     * O(N^2)
-     *
+     * 时间复杂度: O(N^2)
+     * 额外空间复杂度:O(1)
      * @param arr
      * @return
      */
-    public static int[] insertSort(int[] arr) {
+    public static void insertSort(int[] arr) {
 //        for (int i = 1; i < arr.length; i++) {
 //            int insert = arr[i];
 //            // 插入值的前一个值的下标
@@ -30,7 +30,6 @@ public class InsertSort {
 //        return arr;
 
         shellInsertSort(arr, 1);
-        return arr;
     }
 
     /**

@@ -1,6 +1,5 @@
 package sort;
 
-import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 /**

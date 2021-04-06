@@ -7,7 +7,7 @@ package sort;
  */
 public class MergeSort {
     /**
-     * 归并排序(递归)
+     * 归并排序(递归,稳定)
      * a=2,b=2,d=1
      * log(b,a)==d  ==>  N^d * logN ==> N*logN
      * 时间复杂度 O(N log2N)

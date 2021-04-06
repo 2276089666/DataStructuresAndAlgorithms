@@ -8,12 +8,12 @@ package sort;
 public class BubbleSort {
     /**
      * 冒泡排序(稳定)
-     * O(N^2)
-     *
+     * 时间复杂度: O(N^2)
+     * 额外空间复杂度: O(1)
      * @param arr
      * @return
      */
-    public static int[] bubbleSort(int[] arr) {
+    public static void bubbleSort(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             for (int j = 0; j < arr.length - i - 1; j++) {
                 if (arr[j] > arr[j + 1]) {
@@ -21,7 +21,6 @@ public class BubbleSort {
                 }
             }
         }
-        return arr;
     }
 
 }

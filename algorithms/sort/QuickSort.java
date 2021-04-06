@@ -8,9 +8,6 @@ package sort;
 public class QuickSort {
 
     /**
-     * 快速排序(不稳定)
-     * <p>
-     * O(N log2N)
      *
      * @param arr
      * @return

@@ -9,13 +9,20 @@ import java.util.stream.IntStream;
  * @Date 2021/4/5 14:57
  * @Version 1.0
  */
+
+/**
+ * 桶排序是一种大的思想,不基于比较的排序,它的实现有:
+ *  1.计数排序
+ *  2.基数排序
+ */
 public class BucketSort {
     /**
-     * 桶排序(不能有负数)
-     * O(N)
+     * 计数排序(不能有负数)(稳定)
+     * 时间复杂度:O(N)
+     * 额外空间复杂度:O(max)
      * @param arr
      */
-    public static void bucketSort(int[] arr) {
+    public static void countSort(int[] arr) {
         if (arr == null || arr.length < 2) {
             return;
         }
@@ -39,7 +46,7 @@ public class BucketSort {
     }
 
     /**
-     * 桶排序(可以有负数)
+     * 桶排序(可以有负数,并不是真正的桶排序)
      *
      * @param arr
      * @return

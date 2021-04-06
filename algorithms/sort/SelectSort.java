@@ -8,7 +8,8 @@ package sort;
 public class SelectSort {
     /**
      * 选择排序(不稳定)
-     * O(N^2)
+     * 时间复杂度: O(N^2)
+     * 空间复杂度: O(1)
      * @param arr
      */
     public static void selectSort(int[] arr) {
