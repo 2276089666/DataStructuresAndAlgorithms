@@ -1,4 +1,6 @@
-package linkedList;
+package linkedList.exam;
+
+import java.util.ArrayList;
 
 /**
  * @Author ws
@@ -30,6 +32,24 @@ public class LinkedListExam {
         }
         return slow;
     }
+
+    // 输入链表头节点，奇数长度返回中点，偶数长度返回上中点
+    // 粗暴方法
+    public static Node midOrUpMidNode2(Node head){
+        if (head==null){
+            return null;
+        }
+        Node current=head;
+        ArrayList<Node> nodes = new ArrayList<>();
+        while (current!=null){
+            nodes.add(current);
+            current=current.next;
+        }
+        return nodes.get((nodes.size()-1)/2);
+    }
+
+
+
 
     // 输入链表头节点，奇数长度返回中点，偶数长度返回下中点
     public static Node midOrDownMidNode(Node head) {
