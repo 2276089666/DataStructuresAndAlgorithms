@@ -29,11 +29,11 @@ public class JudgingTheBalanceTree {
 
 
     public static class Info {
-        int level;
+        int length;
         boolean balance;
 
-        public Info(int level, boolean balance) {
-            this.level = level;
+        public Info(int length, boolean balance) {
+            this.length = length;
             this.balance = balance;
         }
     }
@@ -53,13 +53,13 @@ public class JudgingTheBalanceTree {
         Info leftInfo = process(head.left);
         Info rightInfo = process(head.right);
         // 当前树的高度等于最高子树加自己的高度1
-        int level=Math.max(leftInfo.level,rightInfo.level)+1;
+        int length=Math.max(leftInfo.length,rightInfo.length)+1;
         boolean balance=true;
         // 任何条件触发就不平衡
-        if (leftInfo.balance==false||rightInfo.balance==false||Math.abs(leftInfo.level-rightInfo.level)>1){
+        if (leftInfo.balance==false||rightInfo.balance==false||Math.abs(leftInfo.length-rightInfo.length)>1){
             balance=false;
         }
-        return new Info(level,balance);
+        return new Info(length,balance);
     }
 
     public static void main(String[] args) {
