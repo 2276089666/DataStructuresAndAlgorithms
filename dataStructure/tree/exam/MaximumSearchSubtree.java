@@ -76,6 +76,8 @@ public class MaximumSearchSubtree {
         return new Info(isSearch, num, max, min);
     }
 
+
+
     public static void main(String[] args) {
 
         Node node = new Node(3);
