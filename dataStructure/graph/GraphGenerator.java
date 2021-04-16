@@ -37,4 +37,9 @@ public class GraphGenerator {
         }
         return graph;
     }
+
+    public static void main(String[] args) {
+        int[][] matrix=new int[][]{{2,3,55},{3,4,66},{2,5,77},{5,4,88}};
+        Graph graph = createGraph(matrix);
+    }
 }
