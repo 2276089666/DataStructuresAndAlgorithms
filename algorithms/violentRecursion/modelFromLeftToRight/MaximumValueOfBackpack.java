@@ -80,6 +80,30 @@ public class MaximumValueOfBackpack {
         return Math.max(p1, p2);
     }
 
+    /**
+     * 动态规划版本
+     * @param weight
+     * @param values
+     * @param bag
+     * @return
+     */
+    public static int dpWay(int[] weight, int[] values, int bag){
+        // 发现rest和index两个参数为可变,我们创建一个二维数组变为动态规划的结果缓存,避免重复计算
+        int N = weight.length;
+        // 上面的暴力递归index == weight.length,说明index达到了length所以我们的N+1,不然下标越界
+        int[][] dp = new int[N+1][bag+1];
+        // 从上面的暴力递归的第二个baseCase,我们可以推断出该二维动态规划数组是从下往上填的,上面的行依赖下面的行
+        // 默认dp[N][]  最后一行全为0
+        for (int index = N-1; index >=0 ; index--) {
+            for (int rest = 1; rest <bag+1 ; rest++) {
+                dp[index][rest]=dp[index+1][rest];
+                if (rest>=weight[index]){
+                    dp[index][rest] = Math.max(dp[index][rest], values[index] + dp[index + 1][rest - weight[index]]);
+                }
+            }
+        }
+        return dp[0][bag];
+    }
 
     public static void main(String[] args) {
         int[] weight = {1, 2, 3};
@@ -89,5 +113,7 @@ public class MaximumValueOfBackpack {
         int maximumValueOf2 = getMaximumValueOf2(weight, values, bag);
         System.out.println(maximumValueOf);
         System.out.println(maximumValueOf2);
+        int i = dpWay(weight, values, bag);
+        System.out.println(i);
     }
 }
