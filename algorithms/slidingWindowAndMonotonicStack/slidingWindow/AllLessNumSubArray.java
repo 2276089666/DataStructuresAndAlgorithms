@@ -47,10 +47,13 @@ public class AllLessNumSubArray {
                 R++;
             }
             // R为满足条件的下标加1
+            // 每次窗口的大小就是我们要求的
             result += R - L;
+            // 移动窗口
             if (min.peekFirst() == L) {
                 min.pollFirst();
             }
+            // 移动窗口
             if (max.peekFirst() == L) {
                 max.pollFirst();
             }
