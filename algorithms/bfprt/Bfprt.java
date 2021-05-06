@@ -79,7 +79,7 @@ public class Bfprt {
         }
     }
 
-    // 核心
+    // 核心,让3N/10的数免去计算,时间复杂度O(7N/10)
     public static int medianOfMedians(int[] arr, int L, int R) {
         int size = R - L + 1;
         int offset = size % 5 == 0 ? 0 : 1;
@@ -96,7 +96,7 @@ public class Bfprt {
     // 先排序,再拿到数组的中位数
     public static int getMedian(int[] arr, int L, int R) {
         insertionSort(arr, L, R);
-        // 拿到中位数
+        // 拿到中位数,排除掉3N/(5*2)
         return arr[(L + R) / 2];
     }
 
