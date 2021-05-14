@@ -1,3 +1,5 @@
+package XOR;
+
 import java.util.Arrays;
 
 /**

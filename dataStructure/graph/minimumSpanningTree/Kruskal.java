@@ -1,7 +1,7 @@
 package graph.minimumSpanningTree;
 
 import graph.Graph;
-import graph.UnionFind;
+import graph.unionFind.UnionFind;
 import java.util.*;
 import static graph.GraphGenerator.createGraph;
 
