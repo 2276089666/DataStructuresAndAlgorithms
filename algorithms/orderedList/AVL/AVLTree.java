@@ -1,4 +1,6 @@
-package orderedList;
+package orderedList.AVL;
+
+import orderedList.AbstractSelfBalancingBinarySearchTree;
 
 /**
  * Not implemented by zuochengyun
@@ -85,25 +87,23 @@ public class AVLTree extends AbstractSelfBalancingBinarySearchTree {
 			int rightHeight = (node.right == null) ? -1 : ((AVLNode) node.right).height;
 			int nodeBalance = rightHeight - leftHeight;
 			// rebalance (-2 means left subtree outgrow, 2 means right subtree)
+			// 我们先判断LL型可以避免(LL&&LR)型同时出现,只需要一次左旋就解决平衡
+			// RR也同理
 			if (nodeBalance == 2) {
-				// RR
-				if (node.right.right != null) {
+				// RR   右树的右树高度为左数高度+1为RR型
+				if (node.right.right != null&&((AVLNode)node.right.right).height==leftHeight+1) {
 					node = (AVLNode) avlRotateLeft(node);
-					break;
 				} else {
 					// RL
 					node = (AVLNode) doubleRotateRightLeft(node);
-					break;
 				}
 			} else if (nodeBalance == -2) {
-				// LL
-				if (node.left.left != null) {
+				// LL 左树的左树高度为右树高度+1为LL型
+				if (node.left.left != null&&((AVLNode)node.left.left).height==rightHeight+1) {
 					node = (AVLNode) avlRotateRight(node);
-					break;
 				} else {
 					// LR
 					node = (AVLNode) doubleRotateLeftRight(node);
-					break;
 				}
 			} else {
 				updateHeight(node);
