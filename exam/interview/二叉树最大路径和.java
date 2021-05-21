@@ -4,7 +4,7 @@ package interview;
  * @Author ws
  * @Date 2021/5/20 9:40
  */
-public class Exam_06 {
+public class 二叉树最大路径和 {
     /**
      * 给定一个二叉树的头节点head，路径的规定有以下三种不同的规定：
      * <p>

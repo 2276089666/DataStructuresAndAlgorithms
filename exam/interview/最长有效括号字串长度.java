@@ -5,7 +5,7 @@ package interview;
  * @Date 2021/5/19 13:19
  * @Version 1.0
  */
-public class Exam_03 {
+public class 最长有效括号字串长度 {
     /**
      * 括号有效配对是指：
      * 1）任何一个左括号都能找到和其正确配对的右括号

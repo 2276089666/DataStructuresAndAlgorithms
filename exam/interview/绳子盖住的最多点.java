@@ -5,7 +5,7 @@ package interview;
  * @Date 2021/5/18 18:46
  * @Version 1.0
  */
-public class Exam_01 {
+public class 绳子盖住的最多点 {
     /**
      * 给定一个有序数组arr，从左到右依次表示X轴上从左往右点的位置
      * 给定一个正整数K，返回如果有一根长度为K的绳子，最多能盖住几个点

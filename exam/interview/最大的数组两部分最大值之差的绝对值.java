@@ -4,7 +4,7 @@ package interview;
  * @Author ws
  * @Date 2021/5/20 16:06
  */
-public class Exam_09 {
+public class 最大的数组两部分最大值之差的绝对值 {
     /**
      * 给定一个数组arr长度为N，你可以把任意长度大于0且小于N的前缀作为左部分，剩下的 作为右部分。
      *

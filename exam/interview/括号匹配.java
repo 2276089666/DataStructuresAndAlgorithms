@@ -7,7 +7,7 @@ import java.util.Stack;
  * @Date 2021/5/18 20:08
  * @Version 1.0
  */
-public class Exam_02 {
+public class 括号匹配 {
     /**
      * 括号有效配对是指：
      * 1）任何一个左括号都能找到和其正确配对的右括号

@@ -4,7 +4,7 @@ package interview;
  * @Author ws
  * @Date 2021/5/20 13:40
  */
-public class Exam_07 {
+public class 行列有序二维数组找值 {
     /**
      * 在行也有序、列也有序的二维数组中，找num，找到返回true，否则false
      */

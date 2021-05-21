@@ -4,7 +4,7 @@ package interview;
  * @Author ws
  * @Date 2021/5/19 15:24
  */
-public class Exam_05 {
+public class 矩阵里最大正方形边长 {
     /**
      * 给定一个N*N的矩阵matrix，只有0和1两种值，返回边框全是1的最大正方形的边长长度。
      * 例如:
