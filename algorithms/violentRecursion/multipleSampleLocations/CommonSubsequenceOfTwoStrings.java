@@ -26,17 +26,16 @@ public class CommonSubsequenceOfTwoStrings {
         int[][] dp = new int[str1.length][str2.length];
         // baseCase
         dp[0][0] = str1[0] == str2[0] ? 1 : 0;
-        // 相等的部分不以str1结尾
         for (int i = 1; i < str1.length; i++) {
             // 串的前面部分某个字符已经相等，后面的这行或这列必定为1
-            dp[i][0] = Math.max(dp[i - 1][0], str1[i] == str2[0] ? 1 : 0);
+            dp[i][0] = str1[i] == str2[0] ? 1 : 0;
         }
-        // 相等的部分不以str2结尾
         for (int j = 1; j < str2.length; j++) {
-            dp[0][j] = Math.max(dp[0][j - 1], str1[0] == str2[j] ? 1 : 0);
+            dp[0][j] = str1[0] == str2[j] ? 1 : 0;
         }
         for (int i = 1; i < str1.length; i++) {
             for (int j = 1; j < str2.length; j++) {
+                // 相等的部分以str1结尾或者以str2结尾
                 dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
                 // 相等的部分不仅以str1结尾并且也以str2结尾
                 if (str1[i] == str2[j]) {
@@ -50,7 +49,7 @@ public class CommonSubsequenceOfTwoStrings {
 
     public static void main(String[] args) {
         String a="1890238kklasd";
-        String b="asdpoqp897231";
+        String b="asdpoqp897231d";
         int commonSubsequenceOfTwoStrings = getCommonSubsequenceOfTwoStrings(a, b);
         System.out.println(commonSubsequenceOfTwoStrings);
     }
