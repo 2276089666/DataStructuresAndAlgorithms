@@ -70,7 +70,7 @@ public class MyHeap<T> {
             int largest = leftChild + 1 < heapSize && (comparator.compare(heap.get(leftChild + 1), heap.get(leftChild)) < 0)
                     ? leftChild + 1
                     : leftChild;
-            largest = comparator.compare(heap.get(largest), heap.get(leftChild)) < 0 ? largest : leftChild;
+            largest = comparator.compare(heap.get(largest), heap.get(i)) < 0 ? largest : i;
             if (largest == i) {
                 break;
             }
