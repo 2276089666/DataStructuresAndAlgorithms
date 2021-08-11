@@ -14,8 +14,11 @@ public class KMP {
 
 
     public static int getIndex(String str, String match) {
-        if (str == null || match == null || match.length() < 1 || match.length() > str.length()) {
+        if (str == null || match == null  || match.length() > str.length()) {
             return -1;
+        }
+        if (match.length()==0){
+            return 0;
         }
         char[] strArray = str.toCharArray();
         char[] matchArray = match.toCharArray();
@@ -50,17 +53,17 @@ public class KMP {
         int i=2;
         // 我们发现next的i依赖于i-1的next值,如果matchArray[next[i-1]]==matchArray[i-1],next[i]=next[i-1]+1
         // 否则next[i-1]一直往左走,直到找到next[i]的值,否则就为-1;
-        // cn代表，cn位置的字符下标，是当前和i-1位置比较的字符
-        int cn=0;
+        // preIndexNext代表，preIndexNext位置的字符下标，是当前和i-1位置比较的字符
+        int preIndexNext=0;
         while (i<next.length){
-            if (matchArray[cn]==matchArray[i-1]){
-                next[i]=cn+1;
+            if (matchArray[preIndexNext]==matchArray[i-1]){
+                next[i]=preIndexNext+1;
                 i++;
-                // i向后移动一个,matchArray[next[i-1]]也会向后移动一个,cn++
-                cn++;
-            }else if (cn>0){
+                // i向后移动一个,matchArray[next[i-1]]也会向后移动一个,preIndexNext++
+                preIndexNext++;
+            }else if (preIndexNext>0){
                 // cn向左移动
-                cn=next[cn];
+                preIndexNext=next[preIndexNext];
             }else {
                 // 一个也没匹配到.next[i]=0
                 i++;
@@ -72,6 +75,8 @@ public class KMP {
     public static void main(String[] args) {
         String a="abcabcdek";
         String b="abcd";
+//        String a="a";
+//        String b="";
         int index = getIndex(a, b);
         System.out.println(index);
     }
