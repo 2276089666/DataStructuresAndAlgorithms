@@ -32,6 +32,16 @@ public class MorrisTraversal {
 		}
 	}
 
+	/**
+	 * 	当前节点cur,一开始来到整棵树的头
+	 * 	当cur不等于null:
+	 * 	(一).cur无左树,cur=cur.right
+	 * 	(二).cur有左树,找到左树的最右节点mostRight
+	 * 		1.如果mostRight.right指向null, mostRight.right=cur; cur=cur.left
+	 * 		2.如果mostRight.right指向cur,	mostRight.right=null; cur=cur.right
+	 *
+	 *
+	 */
 	public static void morrisIn(Node head) {
 		if (head == null) {
 			return;
@@ -41,6 +51,7 @@ public class MorrisTraversal {
 		while (cur1 != null) {
 			cur2 = cur1.left;
 			if (cur2 != null) {
+				// 分支(二)
 				while (cur2.right != null && cur2.right != cur1) {
 					cur2 = cur2.right;
 				}
@@ -53,6 +64,7 @@ public class MorrisTraversal {
 				}
 			}
 			System.out.print(cur1.value + " ");
+			// 分支(一)
 			cur1 = cur1.right;
 		}
 		System.out.println();
