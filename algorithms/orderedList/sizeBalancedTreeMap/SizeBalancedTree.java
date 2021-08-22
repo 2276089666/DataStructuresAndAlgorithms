@@ -16,6 +16,16 @@ public class SizeBalancedTree {
 		}
 	}
 
+	/**
+	 * SizeBalancedTree
+	 * 平衡约束: 任何一个以叔叔节点为头节点的子树节点个数 >= 以侄子节点为头节点的子树节点个数
+	 * 调整平衡策略: 调整平衡后,该子树的所有节点中谁的孩子节点发生了变化,谁就得去判断是否平衡,没有平衡左右旋变平衡(递归调用)
+	 * 相对于AVL Tree优势: 平衡性约束相对模糊,删除的时候不调整平衡,只在新增时调平衡
+	 * 缺点: 调平衡的时候复杂一些,调平衡的过程中节点中谁的孩子节点发生了变化,就得递归调平衡,但是均
+	 * 		摊下来时间复杂度还是O(log N)
+	 * @param <K>
+	 * @param <V>
+	 */
 	public static class SizeBalancedTreeMap<K extends Comparable<K>, V> {
 		private SBTNode<K, V> root;
 
@@ -63,6 +73,75 @@ public class SizeBalancedTree {
 				cur.l = maintain(cur.l);
 				cur.r = maintain(cur.r);
 				cur = maintain(cur);
+			}
+			return cur;
+		}
+
+
+		/**
+		 * 现在，以cur为头的树上，加(key, value)这样的记录
+		 * 加完之后，会对cur做检查，该调整调整
+		 * 返回，调整完之后，整棵树的新头部
+		 * @param cur
+		 * @param key
+		 * @param value
+		 * @return
+		 */
+		private SBTNode<K, V> add(SBTNode<K, V> cur, K key, V value) {
+			if (cur == null) {
+				return new SBTNode<K, V>(key, value);
+			} else {
+				cur.size++;
+				if (key.compareTo(cur.key) < 0) {
+					cur.l = add(cur.l, key, value);
+				} else {
+					cur.r = add(cur.r, key, value);
+				}
+				return maintain(cur);
+			}
+		}
+
+		/**
+		 * 在cur这棵树上，删掉key所代表的节点
+		 * 返回cur这棵树的新头部
+		 * @param cur
+		 * @param key
+		 * @return
+		 */
+		private SBTNode<K, V> delete(SBTNode<K, V> cur, K key) {
+			cur.size--;
+			if (key.compareTo(cur.key) > 0) {
+				cur.r = delete(cur.r, key);
+			} else if (key.compareTo(cur.key) < 0) {
+				cur.l = delete(cur.l, key);
+			} else { // 当前要删掉cur
+				if (cur.l == null && cur.r == null) {
+					// free cur memory -> C++
+					cur = null;
+				} else if (cur.l == null && cur.r != null) {
+					// free cur memory -> C++
+					cur = cur.r;
+				} else if (cur.l != null && cur.r == null) {
+					// free cur memory -> C++
+					cur = cur.l;
+				} else { // 有左有右,后继节点替代当前节点
+					SBTNode<K, V> pre = null;
+					SBTNode<K, V> des = cur.r;
+					des.size--;
+					while (des.l != null) {
+						pre = des;
+						des = des.l;
+						des.size--;
+					}
+					if (pre != null) {
+						pre.l = des.r;
+						des.r = cur.r;
+					}
+					des.l = cur.l;
+					des.size = des.l.size + (des.r == null ? 0 : des.r.size) + 1;
+					// free cur memory -> C++
+					cur = des;
+				}
 			}
 			return cur;
 		}
@@ -117,62 +196,6 @@ public class SizeBalancedTree {
 			return ans;
 		}
 
-		// 现在，以cur为头的树上，加(key, value)这样的记录
-		// 加完之后，会对cur做检查，该调整调整
-		// 返回，调整完之后，整棵树的新头部
-		private SBTNode<K, V> add(SBTNode<K, V> cur, K key, V value) {
-			if (cur == null) {
-				return new SBTNode<K, V>(key, value);
-			} else {
-				cur.size++;
-				if (key.compareTo(cur.key) < 0) {
-					cur.l = add(cur.l, key, value);
-				} else {
-					cur.r = add(cur.r, key, value);
-				}
-				return maintain(cur);
-			}
-		}
-
-		// 在cur这棵树上，删掉key所代表的节点
-		// 返回cur这棵树的新头部
-		private SBTNode<K, V> delete(SBTNode<K, V> cur, K key) {
-			cur.size--;
-			if (key.compareTo(cur.key) > 0) {
-				cur.r = delete(cur.r, key);
-			} else if (key.compareTo(cur.key) < 0) {
-				cur.l = delete(cur.l, key);
-			} else { // 当前要删掉cur
-				if (cur.l == null && cur.r == null) {
-					// free cur memory -> C++
-					cur = null;
-				} else if (cur.l == null && cur.r != null) {
-					// free cur memory -> C++
-					cur = cur.r;
-				} else if (cur.l != null && cur.r == null) {
-					// free cur memory -> C++
-					cur = cur.l;
-				} else { // 有左有右,后继节点替代当前节点
-					SBTNode<K, V> pre = null;
-					SBTNode<K, V> des = cur.r;
-					des.size--;
-					while (des.l != null) {
-						pre = des;
-						des = des.l;
-						des.size--;
-					}
-					if (pre != null) {
-						pre.l = des.r;
-						des.r = cur.r;
-					}
-					des.l = cur.l;
-					des.size = des.l.size + (des.r == null ? 0 : des.r.size) + 1;
-					// free cur memory -> C++
-					cur = des;
-				}
-			}
-			return cur;
-		}
 
 		private SBTNode<K, V> getIndex(SBTNode<K, V> cur, int kth) {
 			if (kth == (cur.l != null ? cur.l.size : 0) + 1) {

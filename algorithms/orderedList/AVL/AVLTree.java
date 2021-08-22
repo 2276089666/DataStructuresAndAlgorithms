@@ -25,6 +25,7 @@ public class AVLTree {
      * AVL树
      * 平衡约束: 任何节点:  | 左子树高度h-右子树高度h | < 2
      * 调整平衡策略: 子树调整平衡后,还要找以子树的上一级父节点的树是否平衡,直到整课AVL树都平衡
+     * 缺点: 新增,删除都得调平衡,平衡性约束性敏感
      */
     public static class AVLTreeMap<K extends Comparable<K>, V> {
         private AVLNode<K, V> root;
@@ -36,9 +37,8 @@ public class AVLTree {
         }
 
         /**
-         *
          * @param cur 需要右旋树的头节点
-         * @return    右旋后树的头节点
+         * @return 右旋后树的头节点
          */
         private AVLNode<K, V> rightRotate(AVLNode<K, V> cur) {
             AVLNode<K, V> left = cur.l;
@@ -101,58 +101,9 @@ public class AVLTree {
         }
 
 
-        private AVLNode<K, V> findLastIndex(K key) {
-            AVLNode<K, V> pre = root;
-            AVLNode<K, V> cur = root;
-            while (cur != null) {
-                pre = cur;
-                if (key.compareTo(cur.k) == 0) {
-                    break;
-                } else if (key.compareTo(cur.k) < 0) {
-                    cur = cur.l;
-                } else {
-                    cur = cur.r;
-                }
-            }
-            return pre;
-        }
-
-        private AVLNode<K, V> findLastNoSmallIndex(K key) {
-            AVLNode<K, V> ans = null;
-            AVLNode<K, V> cur = root;
-            while (cur != null) {
-                if (key.compareTo(cur.k) == 0) {
-                    ans = cur;
-                    break;
-                } else if (key.compareTo(cur.k) < 0) {
-                    ans = cur;
-                    cur = cur.l;
-                } else {
-                    cur = cur.r;
-                }
-            }
-            return ans;
-        }
-
-        private AVLNode<K, V> findLastNoBigIndex(K key) {
-            AVLNode<K, V> ans = null;
-            AVLNode<K, V> cur = root;
-            while (cur != null) {
-                if (key.compareTo(cur.k) == 0) {
-                    ans = cur;
-                    break;
-                } else if (key.compareTo(cur.k) < 0) {
-                    cur = cur.l;
-                } else {
-                    ans = cur;
-                    cur = cur.r;
-                }
-            }
-            return ans;
-        }
-
         /**
          * 按 BST Tree的方式插入节点,并调整平衡
+         *
          * @param cur
          * @param key
          * @param value
@@ -214,6 +165,57 @@ public class AVLTree {
                 cur.h = Math.max(cur.l != null ? cur.l.h : 0, cur.r != null ? cur.r.h : 0) + 1;
             }
             return maintain(cur);
+        }
+
+
+        private AVLNode<K, V> findLastIndex(K key) {
+            AVLNode<K, V> pre = root;
+            AVLNode<K, V> cur = root;
+            while (cur != null) {
+                pre = cur;
+                if (key.compareTo(cur.k) == 0) {
+                    break;
+                } else if (key.compareTo(cur.k) < 0) {
+                    cur = cur.l;
+                } else {
+                    cur = cur.r;
+                }
+            }
+            return pre;
+        }
+
+        private AVLNode<K, V> findLastNoSmallIndex(K key) {
+            AVLNode<K, V> ans = null;
+            AVLNode<K, V> cur = root;
+            while (cur != null) {
+                if (key.compareTo(cur.k) == 0) {
+                    ans = cur;
+                    break;
+                } else if (key.compareTo(cur.k) < 0) {
+                    ans = cur;
+                    cur = cur.l;
+                } else {
+                    cur = cur.r;
+                }
+            }
+            return ans;
+        }
+
+        private AVLNode<K, V> findLastNoBigIndex(K key) {
+            AVLNode<K, V> ans = null;
+            AVLNode<K, V> cur = root;
+            while (cur != null) {
+                if (key.compareTo(cur.k) == 0) {
+                    ans = cur;
+                    break;
+                } else if (key.compareTo(cur.k) < 0) {
+                    cur = cur.l;
+                } else {
+                    ans = cur;
+                    cur = cur.r;
+                }
+            }
+            return ans;
         }
 
         public int size() {
