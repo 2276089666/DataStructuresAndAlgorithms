@@ -78,12 +78,6 @@ public class QuickSort {
     }
 
     private static int[] partition(int[] arr, int low, int high) {
-        if (low > high) {
-            return new int[]{-1, -1};
-        }
-        if (low == high) {
-            return new int[]{low, high};
-        }
         // 小于key的数组末尾下标
         int less = low - 1;
         // 大于key的数组的起始下标

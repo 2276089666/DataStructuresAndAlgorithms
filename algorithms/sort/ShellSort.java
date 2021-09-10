@@ -7,7 +7,7 @@ package sort;
  */
 public class ShellSort {
     /**
-     * 希尔排序(稳定)
+     * 希尔排序(不稳定)
      *
      * @param arr
      * @return
